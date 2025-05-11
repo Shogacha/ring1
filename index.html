@@ -10,19 +10,26 @@
   <video id="video" autoplay playsinline></video>
   <canvas id="three-canvas"></canvas>
 
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
-
-  <script src="script.js" type="module"></script>
   <select id="ringSelector" style="position:absolute;top:10px;left:10px;z-index:10;">
-  <option value="models/ring1.glb">Золотое кольцо</option>
-  <option value="models/ring2.glb">Серебряное кольцо</option>
-  <option value="models/ring3.glb">С камнем</option>
-</select>
+    <option value="models/ring1.glb">Золотое кольцо</option>
+    <option value="models/ring2.glb">Серебряное кольцо</option>
+    <option value="models/ring3.glb">С камнем</option>
+  </select>
 
+  <!-- MediaPipe scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  
+  <!-- Three.js from CDN (ES module version) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  
+  <script src="script.js" type="module"></script>
 </body>
 </html>
