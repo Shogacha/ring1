@@ -4,23 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AR Ring Try-On</title>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body, html {
+      margin: 0;
+      overflow: hidden;
+    }
+    #video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      transform: scaleX(-1); /* зеркально */
+      z-index: 0;
+    }
+    #three-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    #ringSelector {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <video id="video" autoplay playsinline></video>
   <canvas id="three-canvas"></canvas>
 
-  <select id="ringSelector" style="position:absolute;top:10px;left:10px;z-index:10;">
+  <select id="ringSelector">
     <option value="/ring1.glb">Золотое кольцо</option>
     <option value="/ring2.glb">Серебряное кольцо</option>
     <option value="/ring3.glb">С камнем</option>
   </select>
 
-  <!-- MediaPipe scripts -->
+  <!-- MediaPipe -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-  
-  <!-- Three.js from CDN (ES module version) -->
+
+  <!-- Three.js + addons -->
   <script type="importmap">
     {
       "imports": {
@@ -29,7 +56,6 @@
       }
     }
   </script>
-  
   <script src="script.js" type="module"></script>
 </body>
 </html>
