@@ -13,7 +13,8 @@ const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
-camera3D.position.z = 2;
+camera3D.position.z = 0.5;
+
 
 // Свет
 const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -48,6 +49,8 @@ const camera = new Camera(videoElement, {
   width: 640,
   height: 480
 });
+videoElement.style.transform = "scaleX(-1)"; // отразить видео для пользователя
+
 camera.start();
 
 function onResults(results) {
@@ -58,10 +61,11 @@ function onResults(results) {
   const pointB = landmarks[14]; // чуть ближе к ногтю
 
   // Позиция — как обычно
-  const x = (pointA.x - 0.5) * 2;
-  const y = -(pointA.y - 0.5) * 2;
-  const z = -pointA.z;
-  ringModel.position.set(x, y, z);
+const x = -(pointA.x - 0.5) * 2; // инвертируем X
+const y = -(pointA.y - 0.5) * 2;
+const z = -pointA.z;
+ringModel.position.set(x, y, z);
+
 
   // Вектор направления пальца
   const dir = new THREE.Vector3(
@@ -83,7 +87,8 @@ function loadRingModel(path) {
       scene.remove(ringModel);
     }
     ringModel = gltf.scene;
-    ringModel.scale.set(0.02, 0.02, 0.02);
+ringModel.scale.set(0.05, 0.05, 0.05);
+
     scene.add(ringModel);
   }, undefined, (error) => {
     console.error('Error loading model:', error);
@@ -105,3 +110,5 @@ window.addEventListener('resize', () => {
   camera3D.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+console.log(gltf.scene);
+
