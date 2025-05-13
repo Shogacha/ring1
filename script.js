@@ -1,8 +1,9 @@
-import * as THREE from './three.module.js';
-import { GLTFLoader } from './GLTFLoader.js';
+import * as THREE from 'https://cdn.skypack.dev/three@0.152.2';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
 
-let scene, camera, renderer, ringModel;
-let currentRing = 'ring1.glb';
+let scene, camera, renderer, loader;
+let model;
+let currentModelPath = 'ring1.glb'; // Золото по умолчанию
 
 init();
 animate();
@@ -10,47 +11,50 @@ animate();
 function init() {
   scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.z = 2;
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-  scene.add(light);
+  loader = new GLTFLoader();
 
-  loadRingModel(currentRing);
+  // Загрузка первого кольца
+  loadRingModel(currentModelPath);
 
-  document.getElementById('ringSelect').addEventListener('change', function (event) {
-    const selectedRing = event.target.value;
-    if (ringModel) {
-      scene.remove(ringModel);
-    }
-    loadRingModel(selectedRing);
-  });
-
-  // камера
+  // Камера
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then((stream) => {
-      // video.srcObject = stream; // если используется видео-фид
-      console.log('Камера подключена');
+    .then(stream => {
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.play();
     })
-    .catch((err) => {
-      console.error('Ошибка доступа к камере:', err);
+    .catch(err => {
+      console.error("Ошибка доступа к камере:", err);
     });
+
+  // Смена кольца
+  document.getElementById('ringSelect').addEventListener('change', event => {
+    const value = event.target.value;
+    if (value === 'Золотое кольцо') currentModelPath = 'ring1.glb';
+    if (value === 'Серебряное кольцо') currentModelPath = 'ring2.glb';
+    if (value === 'Платиновое кольцо') currentModelPath = 'ring3.glb';
+    loadRingModel(currentModelPath);
+  });
 }
 
-function loadRingModel(modelPath) {
-  const loader = new GLTFLoader();
+function loadRingModel(path) {
+  if (model) {
+    scene.remove(model);
+  }
 
   loader.load(
-    modelPath,
+    path,
     function (gltf) {
-      ringModel = gltf.scene;
-      ringModel.scale.set(0.5, 0.5, 0.5);
-      ringModel.position.set(0, 0, 0);
-      scene.add(ringModel);
+      model = gltf.scene;
+      model.scale.set(0.5, 0.5, 0.5);
+      scene.add(model);
     },
     undefined,
     function (error) {
@@ -61,6 +65,6 @@ function loadRingModel(modelPath) {
 
 function animate() {
   requestAnimationFrame(animate);
-  if (ringModel) ringModel.rotation.y += 0.01;
+  if (model) model.rotation.y += 0.01;
   renderer.render(scene, camera);
 }
